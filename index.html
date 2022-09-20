@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>مجمع العائلة الطبي في اسطنبول || تعرف على الصيدليات المناوبة في منطقتك</title>
+    <link rel = "icon" href = "images/icon.png" type = "image/x-icon">
+</head>
+<body class="pt-0 pt-xl-0 pb-0">
+
+    <div id="spinner" class="spinner-border text-success position-absolute top-50 start-50" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+
+    <div id="afterSpinner" class="d-none">
+      <div class="container-fluid mt-1 mb-3">
+        <div class="row">
+          <div class="text-center d-xxl-none mb-2">
+            <a class="" href="https://yourmedicalfamily.com/?v=29b90007cbf9" target="_blank">
+              <img id="mainLogo" src="images/Al 3aela Logo-02 - Copy.png" alt="Logo" class="">
+            </a>
+          </div>
+
+            <section id="areaListOfOneCitySection" class="bg-third-c col-12 col-sm-10 col-md-8 col-lg-3 col-xxl-2 mx-auto mt-xxl-3 mb-2 px-1 border-a rounded-2 ">   
+              <div class="text-center d-none d-xxl-block">
+                <a class="" href="https://yourmedicalfamily.com/?v=29b90007cbf9" target="_blank">
+                  <img id="mainLogo" src="images/Al 3aela Logo-02 - Copy.png" alt="Logo" class="">
+                </a>
+              </div>
+              <div class="my-1 my-md-2 my-xl-3 text-center fw-semibold">تعرف على الصيدليات المناوبة بجوارك في اسطنبول</div>
+              <select dir="auto" class="mobile-select-style fs-5 py-1 border-0 border-top border-bottom rounded bg-first-c fill-arieas text-center shadow-none d-lg-none" aria-label=".Default select example">
+                      <!-- fill area -->
+              </select>
+              <select dir="auto" class="bg-transparent form-select fill-arieas text-center shadow-none border-0 d-none d-lg-block" aria-label="size 13 select example" size="16">
+                      <!-- fill area -->
+              </select>
+            </section>
+          
+            <article id="displayingMapSection" class="col-12 col-sm-10 col-md-8 col-lg-9 col-xl-9 col-xxl-8 mx-auto px-1 px-lg-0">  
+            <div id="mapContainer" class="map-responsive w-100 rounded-1"></div>
+            <div class="container-fluid mt-lg-3">
+              <div class="row justify-content-center">
+                <div class="py-2 px-1 col-12 col-lg-6 text-center text-lg-start">
+                  <button id="displayCityBtn" class="btn btn-light btn-shadow text-uppercase" title="كل الصيدليات المتاحة في اسطنبول">Istanbul</button>
+                  <button class="btn btn-light click-get-location btn-shadow" title="أقرب صيدلية لموقعي"><i class="fa-solid fa-location-crosshairs"></i></button>
+                </div>
+                <div class="fs-5 fw-semibold d-flex align-items-center justify-content-center justify-content-lg-start col-12 col-lg-6 py-2 px-0">
+                  <span id="numberOfEczane" class="mx-1"></span>
+                  <span id="numberOfEczaneCase" class="mx-1"></span>
+                  <span id="nameOfarea"></span>
+                </div> 
+              </div>
+            </div>
+            <div class="my-2 d-none d-xl-block d-xl-none">
+              <div dir="auto" class="text-center fs-3 fs-4 fw-bold">
+                <a class="text-decoration-none text-black" href="Https://wa.me/905315130116" target="_blank">+ 90 (531) 513 01 16<i class="fa-solid fa-phone-flip mx-1 mx-lg-3 d-none d-sm-inline"></i></a>
+              </div>
+              <div dir="auto" class="text-center fs-6">
+                info@yourmedicalfamily.com<i class="fa-solid fa-envelope mx-3"></i>
+              </div>
+            </div>
+            </article>   
+    
+            <section id="EczaneListOfOneAreaSection" class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-2 mx-auto px-0 mt-xl-3 border-a">  
+            <div class="">
+                <div class="Duty-eczane">
+                    <div id="dutyEczane" class="px-2 px-xl-0">
+                      <!-- fill eczane -->
+                    </div>
+                </div>
+            </div>
+            <div class="my-2 d-block d-xxl-block">
+              <div dir="auto" class="text-center fs-3 fs-4 fw-bold">
+                <a class="text-decoration-none text-black" href="Https://wa.me/905315130116" target="_blank" title="تواصل معنا عبر الهاتف أو عن طريق الواتساب">+ 90 (531) 513 01 16<i class="fa-solid fa-phone-flip mx-3 mx-xl-1"></i></a>
+              </div>
+              <div dir="auto" class="text-center fs-6">
+                info@yourmedicalfamily.com<i class="fa-solid fa-envelope mx-3 mx-xl-1 "></i>
+              </div>
+            </div>
+            </section> 
+          
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_vSsLWWhrxGJ1c-ilHwbVkZtv3cnBSzM&callback=initMap&v=weekly"
+    defer></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

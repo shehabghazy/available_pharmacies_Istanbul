@@ -1,0 +1,73 @@
+* {
+  font-family: 'Almarai', sans-serif;
+}
+
+body {
+  background-color: #9cc0f9;
+}
+
+#mainLogo {
+  width: 133px;
+  height: 75px;
+}
+
+.bg-first-c {
+  background: #9cc0f9;
+}
+
+.bg-second-c {
+  background: #c5e4ce; 
+}
+
+.bg-third-c{
+  background-color: rgb(255, 255, 255 , 0.7);
+
+}
+
+.bg-danger-c-95{
+  background: #d93636; 
+
+}
+
+.Duty-eczane {
+  height: 550px;
+  overflow: auto;
+}
+
+.map-responsive{
+  overflow:hidden;
+  padding-bottom:56.25%;
+  height:0;
+}
+
+.mobile-select-style{
+  outline: none;
+  width: 100%;
+}
+
+.border-a{
+  border-right: 3px solid #9cc0f9;
+  border-left: 3px solid #9cc0f9;
+}
+
+
+ .gm-svpc{
+  z-index: -1  !important;
+}
+
+div[style="display: inline-flex; position: absolute; right: 0px; bottom: 0px;"]{
+    z-index: -1  !important;
+  
+}
+
+div[style="margin: 10px; z-index: 0; position: absolute; cursor: pointer; left: 0px; top: 0px;"]{
+  z-index: -1  !important;
+
+}
+
+@media screen and (max-width: 768px) {
+  div[style="position: absolute; left: 0px; top: 72px;"]{
+    z-index: -1  !important;
+
+  }
+}
