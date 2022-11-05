@@ -17,22 +17,22 @@ const eczaneDetailsPopop = document.getElementById("eczaneDetailsPopop");
 const clickGetLocation = document.getElementsByClassName("click-get-location");
 let clickGetLocationArr = Array.from(clickGetLocation);
 const displayCityBtn = document.getElementById("displayCityBtn");
-const fillAreas = document.getElementsByClassName('fill-arieas') 
-let fillAreasArr = Array.from(fillAreas);
 
 let areaList = [];
 let areaEczane = [];
 let countPharmacy, areaName, selectedArea;
-let map, marker, infowindow, contentString, latLng, latLon;
+let map, marker, infowindow, contentString, latLng, latLon , locationMarker;
 let markerArr = [];
 let contentArr = [];
 let allEczaneHeadToArr = [];
+
 
 // ------------------------------------------------------------------------------------
 // --- Get Data From API --------------------------------------------------------------
 async function getDataFromAPI() {
   try {
-    const eczaneApi = await fetch("https://yourmedicalfamily.com/eczaneAPI/proxy/?get=https://eczaneleri.net/api/eczane-api?key=49d7e314a30f868c478cefd10ed1083c", { mode: "cors" });
+    // Demo API For Available pharmacies in Adana
+    const eczaneApi = await fetch("https://eczaneleri.net/api/eczane-api?demo=1&type=json", { mode: "cors" });
     const finalResult = await eczaneApi.json();
     areaList = finalResult.data[0].area;
     areaEczane = areaList[0].pharmacy;
@@ -57,8 +57,9 @@ function afterGettingData() {
       marker = new google.maps.Marker({ map: map });
       switch (forWhat) {
         case "defaulMap":
-          map.setZoom(10);
-          map.setCenter({ lat: 41.01667, lng: 28.96667 }); // istanbul
+          map.setZoom(12);
+          //  map.setCenter({ lat: 41.01667, lng: 28.96667 }); // for istanbul
+          map.setCenter({ lat: 37.0000000, lng: 35.3300000 }); // for Adana
           displayOnMapAllEczaneIncity();
           break;
   
@@ -73,12 +74,14 @@ function afterGettingData() {
           break;
   
         case "userLocation":
+          locationMarker = new google.maps.Marker({ map: map });
           map.setCenter({ lat: specialParam.lat, lng: specialParam.lng });
-          marker.setPosition({ lat: specialParam.lat, lng: specialParam.lng });
-          marker.setTitle("My Location")
+          locationMarker.setPosition({ lat: specialParam.lat, lng: specialParam.lng });
+          locationMarker.setTitle("My Location")
           map.setZoom(15);
-          marker.setIcon("./images/userLocationIconn.png");
           displayOnMapAllEczaneIncity();
+          locationMarker.setIcon("./images/userLocationIconn.png");
+
           break;
   
         default:
@@ -92,9 +95,11 @@ function afterGettingData() {
       contentArr = [];
       areaList.forEach((area) => {
         area.pharmacy.forEach((eczane, i) => {
+          // marker.setIcon("./images/zft.png")
           generateMarkersForMap(eczane)
           generateInfoWindowForMap(eczane , i)
         });
+
       });
   
       for (let i = 0; i < markerArr.length; i++) {
@@ -104,7 +109,6 @@ function afterGettingData() {
         });
       }
     }
-  
     displayCityBtn.addEventListener("click", () => {
       location.reload();
     });
@@ -120,6 +124,7 @@ function afterGettingData() {
       contentArr = [];
       areaEczaneArr.forEach((eczane, i) => {
         generateMarkersForMap(eczane)
+        // marker.setIcon("./images/zft.png")
         generateInfoWindowForMap(eczane , i)
         markerArr[i].addListener("click", () => {
           infowindow.setContent(contentArr[i]);
@@ -140,6 +145,7 @@ function afterGettingData() {
         map: map,
         title: markerTitle,
       });
+      // marker.setIcon("./images/zft.png")
       generateInfoWindowForMap(areaEczane[getEczaneFromList] , getEczaneFromList)
       marker.addListener("click", () => {
         infowindow.setContent(contentArr[getEczaneFromList]);
@@ -182,18 +188,20 @@ function afterGettingData() {
 
     function generateInfoWindowForMap(getEczane , getIndex) {
       contentString = `
-          <div id="content" dir="ltr" class="pe-4 fs-6">
-              <div class="text-danger text-uppercase fw-semibold text-center position-relative">
+          <div id="content" dir="ltr" class="pe-4 fs-6 position-relative">
+              <div class="text-danger mb-2 text-uppercase fw-semibold text-center ">
               ${getEczane.name}
-              <span class="position-absolute top-0 end-0">
+              <span class="position-absolute handle-eczane-card-btn">
                 <a class="text-decoration-none" href="http://maps.google.com/maps?q=${getEczane.maps}&ll=${getEczane.maps}&z=17" target="_blank">
-                    <button id="activeEczaneBtn${getIndex}" class="all-eczane-btn btn btn-outline-danger rounded-5 fs-6 border-0"><i class="fa-solid fa-diamond-turn-right"></i></button>
+                    <button id="activeEczaneBtn${getIndex}" class="all-eczane-btn btn btn-outline-info rounded-5 fs-6 border-0"><i class="fa-solid fa-diamond-turn-right"></i></button>
                 </a>
               </span>
               </div>
-              <span><i class="fa-solid fa-square-phone"></i> ${getEczane.phone}</span>
-              
-              <div><i class="fa-solid fa-location-dot"></i> ${getEczane.address}</div>
+              <div class="my-1"><i class="fa-solid fa-square-phone me-2 text-info"></i> ${getEczane.phone}</div>
+              <div class="my-1 d-flex">
+                <div><i class="fa-solid fa-location-dot text-info me-2"></i></div>
+                <div>${getEczane.address}</div>
+              </div>
           </div>`;
           contentArr.push(contentString);
           infowindow = new google.maps.InfoWindow({ content: contentArr[getIndex] , maxWidth : 300 });
@@ -202,24 +210,42 @@ function afterGettingData() {
 
 // --- Display Area List and Eczane List ----------------------------------------------
     function displayAreaList() {
-      let areaPreparation = `<option dir="auto" class="all-area fs-5" selected value="${0}">${areaList[0].areaName}  </option>`;
+      let areaPreparationForMob = `<option dir="auto" class="all-area fs-5" selected value="${0}">${areaList[0].areaName}  </option>`;
+      let areaPreparationForPC = 
+                  `<div class="swiper-slide loco_cat__carousel_slide mx-0 border-start border-1 border-light">
+                      <button id="${0}" class="all-area btn btn-info shadow-none rounded-0 swiper-slide loco_cat__carousel_slide mx-0">
+                        ${areaList[0].areaName}
+                      </button>
+                    </div>`
+
       areaList.forEach((area, i) => {
         if (i > 0) {
           areaName = area.areaName;
-        countPharmacy = area.countPharmacy;
-        areaPreparation += `
+          countPharmacy = area.countPharmacy;
+          areaPreparationForMob += `
           <option dir="auto" class="all-area fs-5" value="${i}"> ${areaName}</option>`;
+          areaPreparationForPC +=
+          `<div class="swiper-slide loco_cat__carousel_slide mx-0 border-start border-1 border-light">
+              <button id="${i}" class="all-area btn btn-info shadow-none rounded-0 swiper-slide loco_cat__carousel_slide mx-0">
+                ${areaName}
+              </button>
+            </div>`
         }  
       });
-  
-      fillAreasArr.forEach( element => {
-        element.innerHTML = areaPreparation
-        element.addEventListener("change", (e) => {
-          selectedArea = areaList[e.target.value];
-          areaEczane = selectedArea.pharmacy;
-          displayEczaneListOfOneArea();
-          displayOnMap("allEczaneOfArea");
-        });
+      fillAreasForMOB.innerHTML = areaPreparationForMob
+      fillAreasForMOB.addEventListener("change" , (e)=>{
+        selectedArea = areaList[e.target.value];
+        areaEczane = selectedArea.pharmacy;
+        displayEczaneListOfOneArea();
+        displayOnMap("allEczaneOfArea");
+      })
+
+      fillAreasForPC.innerHTML = areaPreparationForPC
+      fillAreasForPC.addEventListener("click" , (e)=>{
+        selectedArea = areaList[e.target.id];
+        areaEczane = selectedArea.pharmacy;
+        displayEczaneListOfOneArea();
+        displayOnMap("allEczaneOfArea");
       })
       displayEczaneListOfOneArea();
     }
@@ -228,18 +254,21 @@ function afterGettingData() {
       let areaEczanePreparation = ``;
       areaEczane.forEach((eczane, i) => {
         areaEczanePreparation += 
-          `<div dir="auto" id="activeEczane${i}"class="all-eczane-body bg-third-c mb-2 p-1 position-relative rounded rounded-1">
+          `<div dir="auto" id="activeEczane${i}"class="all-eczane-body shadow-sm border border-light border-2 mb-3 p-3 position-relative rounded rounded">
                 <div class="">
                   <a class="text-decoration-none d-block" href="#map">
                     <h6 id="${i}" class="all-eczane-head text-danger text-uppercase fw-semibold" style="cursor: pointer">${eczane.name}</h6>
                   </a> 
                 </div>
                 <div class="m-0">
-                  <p class="m-0 ms-1"><i class="fa-solid fa-square-phone"></i> ${eczane.phone}</p>
-                  <p class="m-0 ms-1"><i class="fa-solid fa-location-dot"></i> ${eczane.address}</p>
+                  <p class="m-0 m-1"><i class="fa-solid fa-square-phone text-info me-2"></i>${eczane.phone}</p>
+                  <div class="m-0 m-1 d-flex">
+                    <div><i class="fa-solid fa-location-dot text-info me-2"></i></div>
+                    <div>${eczane.address}</div>
+                  </div>
                 </div>  
-                <a class="text-decoration-none position-absolute top-0 end-0" href="http://maps.google.com/maps?q=${eczane.maps}&ll=${eczane.maps}&z=17" target="_blank">
-                    <button id="activeEczaneBtn${i}" class="all-eczane-btn btn btn-outline-danger rounded-5 fs-5 border-0"><i class="fa-solid fa-diamond-turn-right"></i></button>
+                <a class="text-decoration-none position-absolute handle-eczane-card-btn" href="http://maps.google.com/maps?q=${eczane.maps}&ll=${eczane.maps}&z=17" target="_blank">
+                    <button id="activeEczaneBtn${i}" class="all-eczane-btn btn btn-outline-info rounded-5 fs-5 border-0"><i class="fa-solid fa-diamond-turn-right"></i></button>
                 </a>
             </div>`;
       });
@@ -284,23 +313,15 @@ function afterGettingData() {
       const allEczaneBtn = document.getElementsByClassName(`all-eczane-btn`);
       const allEczaneBtnToArr = Array.from(allEczaneBtn);
       allEczaneToArr.forEach((eczane) => {
-        eczane.classList.add("bg-third-c");
+        eczane.classList.add("bg-third-c" , "border-light");
         eczane.classList.remove("bg-danger-c-95");
-      });
-      allEczaneHeadToArr.forEach((eczane) => {
-        eczane.classList.add("text-danger");
-        eczane.classList.remove("text-light");
-      });
-      allEczaneBtnToArr.forEach((eczane) => {
-        eczane.classList.add("btn-outline-danger");
-        eczane.classList.remove("btn-outline-light");
+
       });
       activeEczane.classList.replace("bg-third-c", "bg-danger-c-95");
-      activeEczaneHead.classList.replace("text-danger", "text-light");
+      activeEczane.classList.remove("border-light")
       activeEczaneBtn.classList.replace("btn-outline-danger", "btn-outline-light");
     }
 }
-
 
 // --- Wait For API -------------------------------------------------------------------
 async function waitForApi() {
@@ -308,3 +329,117 @@ async function waitForApi() {
   afterGettingData()
 }
 waitForApi();
+
+
+
+// --- jQuery -------------------------------------------------------------------
+
+
+  jQuery('.swiper-container').each(function () {
+    var swiperThis = jQuery(this);
+    var loopLength = swiperThis.data('slides-per-view');
+    var divLength = jQuery(this).find("div.swiper-slide").length;
+    var nextbtn = swiperThis.closest(".swiper-btns").find('.carousel__btn_next');
+    var prevbtn = swiperThis.closest(".swiper-btns").find('.carousel__btn_prev');
+    var sPagination = swiperThis.closest(".swiper-cpagination").find('.carousel__pagination');
+    if (divLength >= loopLength) {
+      var locoSwiper = new Swiper(swiperThis, {
+        slidesPerView: swiperThis.data('slides-per-view'),
+        observer: true,
+        observeParents: true,
+        spaceBetween: swiperThis.data("space-between"),
+        loop: swiperThis.data("loop"),
+        clickable: swiperThis.data("click"),
+        centeredSlides: swiperThis.data("center-slide"),
+        freeMode: swiperThis.data("free-mode"),
+        effect: swiperThis.data("effect"),
+        autoHeight: swiperThis.data("auto-height"),
+        autoplay: swiperThis.data("auto-play"),
+        pagination: {
+          el: sPagination,
+          clickable: true,
+          dynamicBullets: swiperThis.data("dynamic-bullets"),
+        },
+        navigation: {
+          nextEl: nextbtn,
+          prevEl: prevbtn
+        },
+        scrollbar: {
+          container: swiperThis,
+          hide: true,
+        },
+        breakpoints: {
+          // when window width is >= 320px
+          320: {
+            slidesPerView: swiperThis.data("spvxs"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          // when window width is >= 576px
+          576: {
+            slidesPerView: swiperThis.data("spvsm"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          // when window width is >= 768px
+          768: {
+            slidesPerView: swiperThis.data("spvmd"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          // when window width is >= 992px
+          992: {
+            slidesPerView: swiperThis.data("spvlg"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          1200:{
+            slidesPerView: swiperThis.data("spvxl"),
+            spaceBetween: swiperThis.data("space-between"),
+          }
+        }
+      });
+    }else{
+      var locoSwiper = new Swiper(swiperThis, {
+        slidesPerView: swiperThis.data("slides-per-view"),
+        spaceBetween: swiperThis.data("space-between"),
+        loop: false,
+        clickable: swiperThis.data("click"),
+
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.carousel__btn_next',
+          prevEl: '.carousel__btn_prev',
+        },
+        scrollbar: {
+          container: swiperThis,
+          hide: true,
+        },
+        breakpoints: {
+          // when window width is >= 320px
+          320: {
+            slidesPerView: swiperThis.data("spvxs"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          // when window width is >= 576px
+          576: {
+            slidesPerView: swiperThis.data("spvsm"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          // when window width is >= 768px
+          768: {
+            slidesPerView: swiperThis.data("spvmd"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          // when window width is >= 992px
+          992: {
+            slidesPerView: swiperThis.data("spvlg"),
+            spaceBetween: swiperThis.data("space-between"),
+          },
+          1200: {
+            slidesPerView: swiperThis.data("spvxl"),
+            spaceBetween: swiperThis.data("space-between"),
+          }
+        }
+      });
+    }
+  });
