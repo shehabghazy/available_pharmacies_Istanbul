@@ -95,7 +95,6 @@ function afterGettingData() {
       contentArr = [];
       areaList.forEach((area) => {
         area.pharmacy.forEach((eczane, i) => {
-          // marker.setIcon("./images/zft.png")
           generateMarkersForMap(eczane)
           generateInfoWindowForMap(eczane , i)
         });
@@ -113,7 +112,6 @@ function afterGettingData() {
       location.reload();
     });
   
-  
     function displayOnMapAllEczaneInOneArea(areaEczaneArr) {
       let firstEczaneInAreaLatLng = areaEczaneArr[0].maps.split(",");
       map.setCenter({
@@ -124,7 +122,6 @@ function afterGettingData() {
       contentArr = [];
       areaEczaneArr.forEach((eczane, i) => {
         generateMarkersForMap(eczane)
-        // marker.setIcon("./images/zft.png")
         generateInfoWindowForMap(eczane , i)
         markerArr[i].addListener("click", () => {
           infowindow.setContent(contentArr[i]);
@@ -145,7 +142,6 @@ function afterGettingData() {
         map: map,
         title: markerTitle,
       });
-      // marker.setIcon("./images/zft.png")
       generateInfoWindowForMap(areaEczane[getEczaneFromList] , getEczaneFromList)
       marker.addListener("click", () => {
         infowindow.setContent(contentArr[getEczaneFromList]);
@@ -333,8 +329,6 @@ waitForApi();
 
 
 // --- jQuery -------------------------------------------------------------------
-
-
   jQuery('.swiper-container').each(function () {
     var swiperThis = jQuery(this);
     var loopLength = swiperThis.data('slides-per-view');
